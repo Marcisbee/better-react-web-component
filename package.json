@@ -1,11 +1,10 @@
 {
   "name": "better-react-web-component",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Wrapper for React Component to CustomElement",
-  "main": "./dist/react-web-component.mjs",
-  "module": "./dist/react-web-component.mjs",
+	"main": "./dist/react-web-component.js",
+	"module": "./dist/react-web-component.mjs",
   "types": "./dist/react-web-component.d.ts",
-  "type": "module",
   "scripts": {
     "build": "node --no-warnings --loader tsm ./scripts/build.ts && npm run declarations",
     "lint": "rome ci src scripts",
