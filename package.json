@@ -1,0 +1,52 @@
+{
+  "name": "better-react-web-component",
+  "version": "0.1.0",
+  "description": "Wrapper for React Component to CustomElement",
+  "main": "./dist/react-web-component.mjs",
+  "module": "./dist/react-web-component.mjs",
+  "types": "./dist/react-web-component.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "node --no-warnings --loader tsm ./scripts/build.ts && npm run declarations",
+    "lint": "rome ci src scripts",
+    "test": "node --no-warnings --loader tsm ./scripts/test.ts",
+    "declarations": "tsc --declarationDir dist --emitDeclarationOnly --declaration",
+    "postbuild": "cat package.json | sed '/\\\"devDependencies\\\"/,/}/ d; /^$/d' | sed 's/\\.\\/dist\\//\\.\\//g' > ./dist/package.json && cp README.md dist && cp LICENSE dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Marcisbee/better-react-web-component.git"
+  },
+  "keywords": [
+    "webcomponent",
+    "web-component",
+    "customelement",
+    "custom-element",
+    "react-to-webcomponent",
+    "react"
+  ],
+  "author": "Marcis <marcisbergmanis@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Marcisbee/better-react-web-component/issues"
+  },
+  "homepage": "https://github.com/Marcisbee/better-react-web-component#readme",
+  "devDependencies": {
+    "@types/node": "^20.4.9",
+    "@types/react": "^18.2.19",
+    "@types/react-dom": "^18.2.7",
+    "esbuild": "^0.19.0",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "rome": "^12.1.3",
+    "tiny-glob": "^0.2.9",
+    "tsm": "^2.3.0",
+    "typescript": "^5.1.6"
+  },
+  "peerDependencies": {
+    "prop-types": "^15.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  }
+}
