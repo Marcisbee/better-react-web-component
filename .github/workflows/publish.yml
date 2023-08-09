@@ -5,21 +5,7 @@ on:
     types: [created]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npm run build
-      - run: npm run lint
-      # - run: npm test
-      # - run: npm run e2e
-
-  publish-npm:
-    needs: test
+  publish:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -30,8 +16,11 @@ jobs:
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
+      - run: npm ci --no-audit
       - run: npm run build
+      - run: npm run lint
+      # - run: npm test
+      # - run: npm run e2e
       - run: npm publish --provenance --access public ./dist
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
