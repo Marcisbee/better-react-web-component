@@ -359,8 +359,8 @@ export function createCustomElement(
 	bindValue?: Record<string, any>,
 ) {
 	const BoundReactComponent = bindValue
-		? ReactComponent
-		: ReactComponent.bind(bindValue);
+		? ReactComponent.bind(bindValue)
+		: ReactComponent;
 	BoundReactComponent.propTypes = ReactComponent.propTypes;
 
 	class Model extends DOMModel {
