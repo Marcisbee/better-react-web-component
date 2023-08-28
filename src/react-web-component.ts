@@ -9,7 +9,7 @@ interface ExportableProperty {
 }
 
 type ReactComponent = ((props: any) => JSX.Element) & {
-	propTypes: Record<string, Validator<any>>;
+	propTypes?: Record<string, Validator<any>>;
 };
 
 class DOMModel {
@@ -346,22 +346,32 @@ export class CustomElement extends HTMLElement {
 
 /**
  * Creates a CustomElement
- * @param ReactComponent
+ * @param ReactComponent ReactComponent with propTypes
  * @param renderRoot
+ * - "container" appends to generated <div> element
+ * - "shadowRoot" renders to shadow root
+ * - "element" renders directly
+ * @param bindValue
  */
 export function createCustomElement(
 	ReactComponent: ReactComponent,
 	renderRoot: "shadowRoot" | "container" | "element" = "element",
+	bindValue?: Record<string, any>,
 ) {
+	const BoundReactComponent = bindValue
+		? ReactComponent
+		: ReactComponent.bind(bindValue);
+	BoundReactComponent.propTypes = ReactComponent.propTypes;
+
 	class Model extends DOMModel {
 		// rome-ignore lint/correctness/noUnreachableSuper: <Error makes no sense, possibly bug in ROME>
 		constructor() {
 			super();
 
-			const properties = Object.keys(ReactComponent.propTypes);
+			const properties = Object.keys(BoundReactComponent.propTypes || {});
 			for (const name of properties) {
 				const lowerName = name.toLowerCase();
-				const type = ReactComponent.propTypes[name];
+				const type = BoundReactComponent.propTypes![name];
 
 				if (
 					lowerName.indexOf("on") === 0 &&
@@ -391,7 +401,7 @@ export function createCustomElement(
 	class CustomCustomElement extends CustomElement {}
 
 	CustomCustomElement.domModel = Model;
-	CustomCustomElement.ReactComponent = ReactComponent;
+	CustomCustomElement.ReactComponent = BoundReactComponent;
 	CustomCustomElement.renderRoot = renderRoot;
 
 	return CustomCustomElement;
