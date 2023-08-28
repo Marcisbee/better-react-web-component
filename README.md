@@ -34,8 +34,10 @@ customElements.define(
 Usage in html:
 
 ```html
-<hello-component name="Marcis" />
+<hello-component name="World" />
 ```
+
+[Open this demo in StackBlitz](https://stackblitz.com/edit/vitejs-vite-qkz31b?file=src%2Fmain.tsx)
 
 # Install
 
@@ -133,3 +135,5 @@ At the same time in html land:
   });
 </script>
 ```
+
+[Open this demo in StackBlitz](https://stackblitz.com/edit/vitejs-vite-fysuoh?file=src%2Fmain.tsx)
