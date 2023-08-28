@@ -1,4 +1,15 @@
 # Better React Web Component
+
+<a href="https://github.com/Marcisbee/better-react-web-component/actions">
+  <img alt="CI" src="https://img.shields.io/github/actions/workflow/status/Marcisbee/better-react-web-component/main.yml?branch=main&style=flat-square" />
+</a>
+<a href="https://www.npmjs.com/package/better-react-web-component">
+  <img alt="npm" src="https://img.shields.io/npm/v/better-react-web-component?style=flat-square" />
+</a>
+<a href="https://bundlephobia.com/result?p=better-react-web-component">
+  <img alt="package size" src="https://deno.bundlejs.com/badge?q=better-react-web-component@0.2.0&config={%22esbuild%22:{%22external%22:[%22react%22,%22react-dom%22,%22prop-types%22]}}&badge-style=flat-square" />
+</a>
+
 Wrapper for React (v18.x) Component to CustomElement that magically just works and is type safe with Typescript!
 
 - __Small__. About 1.4kB (minified and gzipped). Zero dependencies.
