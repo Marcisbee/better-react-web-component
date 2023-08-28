@@ -22,7 +22,7 @@ class DOMModel {
 	public makeAttribute(
 		name: string,
 		key: string,
-		type: "string" | "boolean" = "string",
+		type: "string" | "boolean" | "number" = "string",
 		defaultValue?: any,
 	) {
 		const normalName = name.toLowerCase();
@@ -35,6 +35,17 @@ class DOMModel {
 					element &&
 					(element.hasAttribute(normalName)
 						? element.getAttribute(normalName)
+						: defaultValue)
+				);
+			});
+		}
+
+		if (type === "number") {
+			this.addProperty(normalName, key, (element) => {
+				return (
+					element &&
+					(element.hasAttribute(normalName)
+						? Number(element.getAttribute(normalName))
 						: defaultValue)
 				);
 			});
@@ -362,6 +373,11 @@ export function createCustomElement(
 
 				if (type === PropTypes.string || type === PropTypes.string.isRequired) {
 					this.makeAttribute(lowerName, name);
+					continue;
+				}
+
+				if (type === PropTypes.number || type === PropTypes.number.isRequired) {
+					this.makeAttribute(lowerName, name, "number");
 					continue;
 				}
 
