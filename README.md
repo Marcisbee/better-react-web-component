@@ -11,7 +11,7 @@ import PropTypes, { InferProps } from 'prop-types'
 
 // Define custom component interface in prop types
 HelloComponent.propTypes = {
-	name: PropTypes.string,
+  name: PropTypes.string,
 }
 
 // Infer typescript types from prop types
