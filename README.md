@@ -19,15 +19,15 @@ type ComponentProps = InferProps<typeof HelloComponent.propTypes>
 
 // Defined component
 function HelloComponent({ name = "unknown" }: ComponentProps) {
-	return (
-		<h1>Hello {name}!</h1>
-	)
+  return (
+    <h1>Hello {name}!</h1>
+  )
 }
 
 // Create and register custom component
 customElements.define(
-	"hello-component",
-	createCustomElement(HelloComponent, "shadowRoot"),
+  "hello-component",
+  createCustomElement(HelloComponent, "shadowRoot"),
 )
 ```
 
@@ -54,8 +54,8 @@ Attributes are defined on component [`propTypes` object](https://github.com/face
 
 ```ts
 MyReactComponent.propTypes = {
-	name: PropTypes.string,
-	requiredName: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  requiredName: PropTypes.string.isRequired,
 }
 ```
 
@@ -77,10 +77,10 @@ MyReactComponent.propTypes = {
 Default values are defined on react component itself.
 ```ts
 function MyReactComponent({
-	requiredName,
-	name = "unknown",
+  requiredName,
+  name = "unknown",
 }: InferProps<typeof MyReactComponent.propTypes>) {
-	...
+  ...
 }
 ```
 
@@ -96,25 +96,25 @@ import PropTypes, { InferProps } from 'prop-types'
 import { useState } from 'react'
 
 InputName.propTypes = {
-	name: PropTypes.string,
-	onNameChange: PropTypes.func, // Event name must start with "on" and will be lowercase in html land
+  name: PropTypes.string,
+  onNameChange: PropTypes.func, // Event name must start with "on" and will be lowercase in html land
 }
 
 function InputName({
-	name = 'unknown',
-	onNameChange,
+  name = 'unknown',
+  onNameChange,
 }: InferProps<typeof InputName.propTypes>) {
-	const [localName, setLocalName] = useState(name)
+  const [localName, setLocalName] = useState(name)
 
-	return (
-		<input
-			value={localName}
-			onChange={(e) => {
-				setLocalName(e.target.value)
-				onNameChange?.({ detail: e.target.value }) // Trigger custom event here if it's defined
-			}}
-		/>
-	)
+  return (
+    <input
+      value={localName}
+      onChange={(e) => {
+        setLocalName(e.target.value)
+        onNameChange?.({ detail: e.target.value }) // Trigger custom event here if it's defined
+      }}
+    />
+  )
 }
 
 customElements.define('input-name', createCustomElement(InputName))
@@ -125,11 +125,11 @@ At the same time in html land:
 ```html
 <input-name name="World" />
 <script>
-	const inputNameEl = document.querySelector('input-name');
+  const inputNameEl = document.querySelector('input-name');
 
-	// Note that event name is ALWAYS lowercase without `on` in front of it
-	inputNameEl.addEventListener('namechange', (e) => {
-		console.log(e.detail);
-	});
+  // Note that event name is ALWAYS lowercase without `on` in front of it
+  inputNameEl.addEventListener('namechange', (e) => {
+    console.log(e.detail);
+  });
 </script>
 ```
