@@ -1,12 +1,13 @@
 {
-	"$schema": "./node_modules/rome/configuration_schema.json",
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
 	"linter": {
 		"enabled": true,
 		"rules": {
 			"recommended": true,
 			"suspicious": {
 				"noExplicitAny": "off",
-				"useValidTypeof": "off"
+				"useValidTypeof": "off",
+				"noAssignInExpressions": "off"
 			},
 			"performance": {
 				"noDelete": "off"

@@ -7,26 +7,25 @@
   <img alt="npm" src="https://img.shields.io/npm/v/better-react-web-component?style=flat-square" />
 </a>
 <a href="https://bundlephobia.com/result?p=better-react-web-component">
-  <img alt="package size" src="https://deno.bundlejs.com/badge?q=better-react-web-component@0.2.0&config={%22esbuild%22:{%22external%22:[%22react%22,%22react-dom%22,%22prop-types%22]}}&badge-style=flat-square" />
+  <img alt="package size" src="https://deno.bundlejs.com/badge?q=better-react-web-component&config={%22esbuild%22:{%22external%22:[%22react%22,%22react-dom%22]}}&badge-style=flat-square" />
 </a>
 
 Wrapper for React (v18.x) Component to CustomElement that magically just works and is type safe with Typescript!
 
 - __Small__. About 1.4kB (minified and gzipped). Zero dependencies.
-- __Simple__. Each component interface is defined with only using prop-types.
+- __Simple__. Each component interface is defined with strict types.
 - Good __TypeScript__ support.
 
 ```tsx
-import { createCustomElement } from 'better-react-web-component'
-import PropTypes, { InferProps } from 'prop-types'
+import { createCustomElement, InferProps, optional } from 'better-react-web-component'
 
-// Define custom component interface in prop types
-HelloComponent.propTypes = {
-  name: PropTypes.string,
+// Define custom component interface
+HelloComponent.types = {
+  name: optional.string,
 }
 
-// Infer typescript types from prop types
-type ComponentProps = InferProps<typeof HelloComponent.propTypes>
+// Infer typescript types
+type ComponentProps = InferProps<typeof HelloComponent.types>
 
 // Defined component
 function HelloComponent({ name = "unknown" }: ComponentProps) {
@@ -59,32 +58,32 @@ npm install better-react-web-component
 # Guide
 
 ## Define attributes
-Attributes are defined on component [`propTypes` object](https://github.com/facebook/prop-types).
+Attributes are defined on component `types` object.
 
 > **Note**
 > Attribute names defined here are case-insensitive as they are in HTML spec!
 > Hence the below can be used as `<component name="..." />` or `<component nAmE="..." />`.
 
 ```ts
-MyReactComponent.propTypes = {
-  name: PropTypes.string,
-  requiredName: PropTypes.string.isRequired,
+MyReactComponent.types = {
+  name: optional.string,
+  requiredName: required.string,
 }
 ```
 
 ### Supported prop types:
 - String:
-	- `PropTypes.string`
-	- `PropTypes.string.isRequired`
+	- `optional.string`
+	- `required.string`
 - Number:
-	- `PropTypes.number`
-	- `PropTypes.number.isRequired`
+	- `optional.number`
+	- `required.number`
 - Boolean:
-	- `PropTypes.bool`
-	- `PropTypes.bool.isRequired`
+	- `optional.boolean`
+	- `required.boolean`
 - Function:
-	- `PropTypes.func`
-	- `PropTypes.func.isRequired`
+	- `optional.event`
+	- `required.event`
 
 ## Define default values
 Default values are defined on react component itself.
@@ -92,7 +91,7 @@ Default values are defined on react component itself.
 function MyReactComponent({
   requiredName,
   name = "unknown",
-}: InferProps<typeof MyReactComponent.propTypes>) {
+}: InferProps<typeof MyReactComponent.types>) {
   ...
 }
 ```
@@ -104,19 +103,18 @@ This package also supports custom events to be defined.
 > Event names defined here are __CASE-SENSITIVE__ so we lowercase them and remove leading `"on"` to match other event names!
 
 ```tsx
-import { createCustomElement } from 'better-react-web-component'
-import PropTypes, { InferProps } from 'prop-types'
+import { createCustomElement, InferProps, optional } from 'better-react-web-component'
 import { useState } from 'react'
 
-InputName.propTypes = {
-  name: PropTypes.string,
-  onNameChange: PropTypes.func, // Event name must start with "on" and will be lowercase in html land
+InputName.types = {
+  name: optional.string,
+  onNameChange: optional.func, // Event name must start with "on" and will be lowercase in html land
 }
 
 function InputName({
   name = 'unknown',
   onNameChange,
-}: InferProps<typeof InputName.propTypes>) {
+}: InferProps<typeof InputName.types>) {
   const [localName, setLocalName] = useState(name)
 
   return (

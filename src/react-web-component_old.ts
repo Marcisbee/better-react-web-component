@@ -1,4 +1,3 @@
-import PropTypes, { type Validator } from "prop-types";
 import React from "react";
 import ReactDOM from "react-dom/client";
 
@@ -8,15 +7,58 @@ interface ExportableProperty {
 	fromDOM: (element: HTMLElement) => any;
 }
 
+// Since typescript cannot calculate exact values of
+// binary number calculations, we calculate them
+// ahead of time in:
+// https://dune.land/dune/d8629da4-6f1d-472e-890a-36e0cf399c23
+
+// Optional types
+export const optional = {
+	string: 1,
+	number: 2,
+	boolean: 4,
+	event: 8,
+} as const;
+
+// Required types
+export const required = {
+	string: 16,
+	number: 32,
+	boolean: 64,
+	event: 128,
+} as const;
+
+type InferType<T> = T extends typeof optional.string
+	? string | undefined
+	: T extends typeof optional.number
+	? number | undefined
+	: T extends typeof optional.boolean
+	? boolean | undefined
+	: T extends typeof optional.event
+	? (e: { detail: any }) => void | undefined
+	: T extends typeof required.string
+	? string
+	: T extends typeof required.number
+	? number
+	: T extends typeof required.boolean
+	? boolean
+	: T extends typeof required.event
+	? (e: { detail: any }) => void
+	: never;
+
+export type InferProps<Props extends Record<string, number>> = {
+	[K in keyof Props]-?: InferType<Props[K]>;
+};
+
 type ReactComponent = ((props: any) => JSX.Element) & {
-	propTypes?: Record<string, Validator<any>>;
+	types?: Record<string, number>;
 };
 
 class DOMModel {
+	public _attributes: string[] | null = [];
 	private _events: { name: string; key: string }[] = [];
 	private _attributeKeys: Record<string, string> = {};
 	private _observers: MutationObserver[] | null = [];
-	private _attributes: string[] | null = [];
 	private _exportableProperties?: ExportableProperty[] | null;
 
 	public makeAttribute(
@@ -197,9 +239,7 @@ class DOMModel {
 			return {};
 		}
 
-		const wrappedProperties: Record<string, any> = {
-			allowPublishProduct: true,
-		};
+		const wrappedProperties: Record<string, any> = {};
 		this._exportableProperties.forEach((property) => {
 			wrappedProperties[property.key] = (this as any)[property.name];
 		});
@@ -280,9 +320,10 @@ function renderCustomElement(component: CustomElement) {
 		Object.assign(properties, events),
 		null,
 	);
-	const reactRoot = ReactDOM.createRoot(_rootShadows.get(component));
-	component.__reactComp = reactRoot;
-
+	// rome-ignore lint/suspicious/noAssignInExpressions: <explanation>
+	const reactRoot = (component.__reactComp ??= ReactDOM.createRoot(
+		_rootShadows.get(component),
+	));
 	reactRoot.render(reactElem);
 }
 
@@ -346,7 +387,7 @@ export class CustomElement extends HTMLElement {
 
 /**
  * Creates a CustomElement
- * @param ReactComponent ReactComponent with propTypes
+ * @param ReactComponent ReactComponent with types
  * @param renderRoot
  * - "container" appends to generated <div> element
  * - "shadowRoot" renders to shadow root
@@ -361,44 +402,47 @@ export function createCustomElement(
 	const BoundReactComponent = bindValue
 		? ReactComponent.bind(bindValue)
 		: ReactComponent;
-	BoundReactComponent.propTypes = ReactComponent.propTypes;
+	BoundReactComponent.types = ReactComponent.types;
 
 	class Model extends DOMModel {
-		// rome-ignore lint/correctness/noUnreachableSuper: <Error makes no sense, possibly bug in ROME>
 		constructor() {
 			super();
 
-			const properties = Object.keys(BoundReactComponent.propTypes || {});
+			const properties = Object.keys(BoundReactComponent.types || {});
 			for (const name of properties) {
 				const lowerName = name.toLowerCase();
-				const type = BoundReactComponent.propTypes![name];
+				const type = BoundReactComponent.types![name];
 
 				if (
 					lowerName.indexOf("on") === 0 &&
-					(type === PropTypes.func || type === PropTypes.func.isRequired)
+					(type === optional.event || type === required.event)
 				) {
 					this.addEvent(lowerName.slice(2), name);
 					continue;
 				}
 
-				if (type === PropTypes.string || type === PropTypes.string.isRequired) {
+				if (type === optional.string || type === required.string) {
 					this.makeAttribute(lowerName, name);
 					continue;
 				}
 
-				if (type === PropTypes.number || type === PropTypes.number.isRequired) {
+				if (type === optional.number || type === required.number) {
 					this.makeAttribute(lowerName, name, "number");
 					continue;
 				}
 
-				if (type === PropTypes.bool || type === PropTypes.bool.isRequired) {
+				if (type === optional.boolean || type === required.boolean) {
 					this.makeAttribute(lowerName, name, "boolean", false);
 				}
 			}
 		}
 	}
 
-	class CustomCustomElement extends CustomElement {}
+	class CustomCustomElement extends CustomElement {
+		static observedAttributes = Object.keys(BoundReactComponent.types || {})
+			.map((key) => key.toLowerCase())
+			.filter((key) => key.indexOf("on") !== 0);
+	}
 
 	CustomCustomElement.domModel = Model;
 	CustomCustomElement.ReactComponent = BoundReactComponent;

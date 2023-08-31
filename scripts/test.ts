@@ -1,14 +1,15 @@
 import process from "node:process";
+import { pipeline } from "node:stream/promises";
 import { run } from "node:test";
 import { spec as SpecReporter } from "node:test/reporters";
-import { pipeline } from "node:stream/promises";
-import glob from "tiny-glob";
+
+import { regexGlob } from "./utils";
 
 let fail = false;
 
 const source = run({
 	concurrency: true,
-	files: await glob("src/**/*.test.ts"),
+	files: regexGlob("src", { include: [/\.test\.ts$/] }),
 }).once("test:fail", () => {
 	fail = true;
 });
