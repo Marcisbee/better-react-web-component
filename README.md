@@ -12,7 +12,7 @@
 
 Wrapper for React (v18.x) Component to CustomElement that magically just works and is type safe with Typescript!
 
-- __Small__. About 1.4kB (minified and gzipped). Zero dependencies.
+- __Small__. About 1kB (minified and gzipped). Zero dependencies.
 - __Simple__. Each component interface is defined with strict types.
 - Good __TypeScript__ support.
 
