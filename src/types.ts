@@ -26,7 +26,7 @@ type InferType<T> = T extends typeof optional.string
 	: T extends typeof optional.boolean
 	? boolean | undefined
 	: T extends typeof optional.event
-	? (e: { detail: any }) => void | undefined
+	? ((e: { detail: any }) => void) | undefined
 	: T extends typeof required.string
 	? string
 	: T extends typeof required.number
@@ -37,6 +37,16 @@ type InferType<T> = T extends typeof optional.string
 	? (e: { detail: any }) => void
 	: never;
 
-export type InferProps<Props> = {
-	[K in keyof Props]-?: InferType<Props[K]>;
+type Required<T> = {
+	[K in keyof T as undefined extends T[K] ? K : never]?: T[K];
 };
+
+type Optional<T> = {
+	[K in keyof T as undefined extends T[K] ? never : K]: T[K];
+};
+
+type MakeUndefinedOptional<T> = Required<T> & Optional<T>;
+
+export type InferProps<Props> = MakeUndefinedOptional<{
+	[K in keyof Props]-?: InferType<Props[K]>;
+}>;
