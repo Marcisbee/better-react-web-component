@@ -17,6 +17,7 @@ for (const format of ["cjs", "esm"] as const) {
 			external: ["react", "react-dom"],
 			platform: "browser",
 			logLevel: "info",
+			mangleProps: /^_/,
 		})
 		.catch(() => process.exit(1));
 }
