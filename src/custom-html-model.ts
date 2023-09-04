@@ -62,6 +62,11 @@ export class CustomHTMLModel {
 				continue;
 			}
 
+			if (type === optional.json || type === required.json) {
+				this.addAttribute(lowerName, originalName, "json");
+				continue;
+			}
+
 			if (type === optional.boolean || type === required.boolean) {
 				this.addAttribute(lowerName, originalName, "boolean", false);
 			}
@@ -71,7 +76,7 @@ export class CustomHTMLModel {
 	private addAttribute(
 		name: string,
 		originalName: string,
-		type: "string" | "number" | "boolean",
+		type: "string" | "number" | "json" | "boolean",
 		defaultValue?: any,
 	) {
 		if (type === "string") {
@@ -92,6 +97,19 @@ export class CustomHTMLModel {
 					el &&
 					(el.hasAttribute(name)
 						? Number(el.getAttribute(name))
+						: defaultValue),
+			]);
+			return;
+		}
+
+		if (type === "json") {
+			this._properties.push([
+				name,
+				originalName,
+				(el) =>
+					el &&
+					(el.hasAttribute(name)
+						? JSON.parse(el.getAttribute(name) || "null")
 						: defaultValue),
 			]);
 			return;

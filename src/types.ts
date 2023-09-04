@@ -5,22 +5,26 @@
 
 // Optional types
 export const optional = {
-	string: 1,
-	number: 2,
-	boolean: 4,
-	event: 8,
+	string: 0,
+	number: 1,
+	boolean: 2,
+	event: 3,
+	json: 4,
 } as const;
 
 // Required types
 export const required = {
-	string: 16,
-	number: 32,
-	boolean: 64,
-	event: 128,
+	string: 20,
+	number: 21,
+	boolean: 22,
+	event: 23,
+	json: 24,
 } as const;
 
 type InferType<T> = T extends typeof optional.string
 	? string | undefined
+	: T extends typeof optional.json
+	? Record<string, unknown> | undefined
 	: T extends typeof optional.number
 	? number | undefined
 	: T extends typeof optional.boolean
@@ -29,6 +33,8 @@ type InferType<T> = T extends typeof optional.string
 	? ((e: { detail: any }) => void) | undefined
 	: T extends typeof required.string
 	? string
+	: T extends typeof required.json
+	? Record<string, unknown>
 	: T extends typeof required.number
 	? number
 	: T extends typeof required.boolean
@@ -47,6 +53,13 @@ type Optional<T> = {
 
 type MakeUndefinedOptional<T> = Required<T> & Optional<T>;
 
-export type InferProps<Props> = MakeUndefinedOptional<{
-	[K in keyof Props]-?: InferType<Props[K]>;
-}>;
+export type InferProps<
+	Props,
+	Overwrite extends Record<string, any> = {},
+> = Omit<
+	MakeUndefinedOptional<{
+		[K in keyof Props]-?: InferType<Props[K]>;
+	}>,
+	keyof Overwrite
+> &
+	Overwrite;

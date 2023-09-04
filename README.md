@@ -81,6 +81,9 @@ MyReactComponent.types = {
 - Boolean:
 	- `optional.boolean`
 	- `required.boolean`
+- Json (parses attribute with JSON.parse):
+	- `optional.json`
+	- `required.json`
 - Function:
 	- `optional.event`
 	- `required.event`
