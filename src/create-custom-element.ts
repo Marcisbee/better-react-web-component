@@ -10,12 +10,17 @@ import { CustomHTMLModel } from "./custom-html-model.ts";
  * @param renderRoot
  * - "container" appends to generated <div> element
  * - "shadowRoot" renders to shadow root
+ * - "shadowRootClosed" renders to closed shadow root
  * - "element" renders directly
  * @param bindValue
  */
 export function createCustomElement(
 	ReactComponent: ReactComponent,
-	renderRoot: "shadowRoot" | "container" | "element" = "element",
+	renderRoot:
+		| "shadowRoot"
+		| "shadowRootClosed"
+		| "container"
+		| "element" = "element",
 	bindValue?: Record<string, any>,
 ) {
 	const BoundReactComponent = bindValue

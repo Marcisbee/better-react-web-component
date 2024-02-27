@@ -14,7 +14,11 @@ export class CustomElementTemplate extends HTMLElement {
 
 	public static domModel: CustomHTMLModel;
 	public static ReactComponent: ReactComponent;
-	public static renderRoot: "shadowRoot" | "container" | "element";
+	public static renderRoot:
+		| "shadowRoot"
+		| "shadowRootClosed"
+		| "container"
+		| "element";
 
 	connectedCallback() {
 		this.rootElement = this;
@@ -24,6 +28,9 @@ export class CustomElementTemplate extends HTMLElement {
 				this.appendChild(this.rootElement);
 				break;
 			case "shadowRoot":
+				this.rootElement = this.attachShadow({ mode: "open" });
+				break;
+			case "shadowRootClosed":
 				this.rootElement = this.attachShadow({ mode: "closed" });
 				break;
 		}

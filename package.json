@@ -1,6 +1,6 @@
 {
   "name": "better-react-web-component",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Wrapper for React Component to CustomElement",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
