@@ -99,6 +99,28 @@ function MyReactComponent({
 }
 ```
 
+## Handle json/object values
+In webcomponent space there is no object type to be passed as value. Instead we can pass json object as string and then parse it in react component. For this we can use `optional.json` or `required.json` (it does parsing automatically so component will receive object not string).
+
+And for Typescript to have proper types we can use `InferProps` feature to replace/update properties like json values.
+```ts
+MyReactComponent.types = {
+  custom: required.json,
+}
+
+type Props = InferProps<typeof MyReactComponent.types, {
+  custom: {
+    foo: string;
+    bar: number;
+  }
+}>
+```
+
+Then in component this object can be passed as string
+```html
+<my-react-component custom='{"foo":"one","bar":2}' />
+```
+
 ## Handle events
 This package also supports custom events to be defined.
 
