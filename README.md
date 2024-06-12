@@ -133,7 +133,7 @@ import { useState } from 'react'
 
 InputName.types = {
   name: optional.string,
-  onNameChange: optional.func, // Event name must start with "on" and will be lowercase in html land
+  onNameChange: optional.event, // Event name must start with "on" and will be lowercase in html land
 }
 
 function InputName({
