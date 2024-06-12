@@ -47,7 +47,7 @@ Usage in html:
 <hello-component name="World" />
 ```
 
-[Open this demo in StackBlitz](https://stackblitz.com/edit/vitejs-vite-qkz31b?file=src%2Fmain.tsx)
+[Open this demo in dune.land](https://dune.land/dune/08fcf962-8633-4ba4-b10f-fe3686573115)
 
 # Install
 
@@ -170,4 +170,4 @@ At the same time in html land:
 </script>
 ```
 
-[Open this demo in StackBlitz](https://stackblitz.com/edit/vitejs-vite-fysuoh?file=src%2Fmain.tsx)
+[Open this demo in dune.land](https://dune.land/dune/ad3ae58f-876e-4f25-9ee2-c1262cd68d3e)
